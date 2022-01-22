@@ -152,4 +152,6 @@ I enable mdns for zeroconf setup of local resources such as printers:
 # firewall-dms --add-service=mdns --permanent
 ```
 
+I add the icc profile in this repo to improve the screen colours. 
+
 
