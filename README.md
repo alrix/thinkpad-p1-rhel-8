@@ -10,6 +10,8 @@ Recently, I used RHEL 8.5 on a desktop and was impressed with its polish and ext
 
 This README covers the steps I had to take to make RHEL 8 fully functional on the laptop and serve as a reminder to me for if I rebuild or when the inevitable upgrade to RHEL 9 comes along.
 
+For most things, I use RedHat's own documentation or if I need to dig further, the ArchLinux wiki. I find these are better sources of information than following random blogs or troubleshooting wiki's.
+
 ## Steps
 
 ### 1 RHEL Installation
@@ -88,26 +90,26 @@ TLP depends on a kernel module acpi_call to handle threshold adjustment and also
 Install DKMS:
 
 ```
-dnf install dkms
+# dnf install dkms
 ```
 
 You can clone the following nix community repository where the acpi_call module is being maintained - https://github.com/nix-community/acpi_call or download the following:
 
 ```
-wget https://github.com/nix-community/acpi_call/archive/refs/tags/v1.2.2.zip
+# wget https://github.com/nix-community/acpi_call/archive/refs/tags/v1.2.2.zip
 ```
 
 Extract out to somewhere - e.g. opt
 
 ```
-unzip v1.2.2.zip
+# unzip v1.2.2.zip
 ```
 
 Go into the directory and use DKMS to build and install the module. On new kernel installs, it will automatically get updated:
 
 ```
-make dkms-add
-make dkms-install
+# make dkms-add
+# make dkms-install
 ```
 
 You can check to see if the module is loaded using lsmod.
@@ -123,14 +125,31 @@ Finally, run tlp-stat and check through the output. You should see the following
 tpacpi-bat = active (recalibrate)
 ```
 
+### 6 Enable FlatPak
 
+Flatpak is useful if you want to install software such as Spotify. To enable, follow RedHat's instructions here:
 
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/using_the_desktop_environment_in_rhel_8/assembly_installing-applications-using-flatpak_using-the-desktop-environment-in-rhel-8
 
+Once setup, I then enable flatpak.org's repository to gain access, following their instructions at https://flatpak.org/setup/Red%20Hat%20Enterprise%20Linux/
 
+### 7 Scanning
 
+Unfortunately, SANE doesn't pick up my canon pixma scanner automatically. I follow the instructions on the excellent ArchLinux wiki here to update the files under /etc/sane.d - https://wiki.archlinux.org/title/SANE
 
+### 8 Final Tuning
 
+I set the power-profile to powersave but there are other options:
 
+```
+# tuned-adm profile powersave
+```
 
+I enable mdns for zeroconf setup of local resources such as printers:
+```
+# dnf install nss-mdns
+# firewall-cmd --add-service=mdns 
+# firewall-dms --add-service=mdns --permanent
+```
 
 
